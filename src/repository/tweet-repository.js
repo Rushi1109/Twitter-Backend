@@ -1,4 +1,4 @@
-const Tweet = require("../models/tweet.js");
+import Tweet from "../models/tweet.js";
 
 class TweetRepository {
 
@@ -25,13 +25,13 @@ class TweetRepository {
     // To get a tweet by id and populate comments of it
     async getWithComments(id) {
         try {
-            const tweet = await Tweet.findById(id).populate({path: 'comments'}).lean();
+            const tweet = await Tweet.findById(id).populate({ path: 'comments' }).lean();
             return tweet;
         } catch (error) {
             console.log(error);
         }
     }
-    
+
     // To delete the tweet 
     async destroy(id) {
         try {
@@ -53,4 +53,4 @@ class TweetRepository {
     }
 }
 
-module.exports = TweetRepository;
+export default TweetRepository;
