@@ -11,26 +11,32 @@ class TweetService {
         const content = data.content;
 
         // RegEx for extracting hashtags
-        const tags = content.match(/#[a-zA-Z0-9_]+/g).map((tag) => tag.substring(1).toLowerCase());
+        let tags = content.match(/#[a-zA-Z0-9_]+/g);
 
         // Calling create method of tweet-repository
         const tweet = await this.tweetRepository.create(data);
 
         if (tags) {
-            let alreadyPresentTags = await this.hashtagRepository.findByName(tags);
-            let titleOfPresentTags = alreadyPresentTags.map((tag) => tag.title);
-            let newTags = tags.filter((tag) => !titleOfPresentTags.includes(tag));
+            try {
+                tags = tags.map((tag) => tag.substring(1).toLowerCase());
+                tags = [...new Set(tags)];
+                let alreadyPresentTags = await this.hashtagRepository.findByName(tags);
+                let titleOfPresentTags = alreadyPresentTags.map((tag) => tag.title);
+                let newTags = tags.filter((tag) => !titleOfPresentTags.includes(tag));
 
-            newTags = newTags.map((tag) => {
-                return { title: tag, tweets: [tweet.id] }
-            });
+                newTags = newTags.map((tag) => {
+                    return { title: tag, tweets: [tweet.id] }
+                });
 
-            await this.hashtagRepository.bulkCreate(newTags);
+                await this.hashtagRepository.bulkCreate(newTags);
 
-            alreadyPresentTags.forEach((tag) => {
-                tag.tweets.push(tweet.id);
-                tag.save();
-            });
+                alreadyPresentTags.forEach((tag) => {
+                    tag.tweets.push(tweet.id);
+                    tag.save();
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         return tweet;
