@@ -26,7 +26,7 @@ class LikeService {
         if (exists) {
             likeable.likes.pull(exists.id);
             await likeable.save();
-            await exists.remove();
+            await exists.deleteOne();
 
             var isAdded = false;
         } else {
