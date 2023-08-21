@@ -25,6 +25,16 @@ class TweetRepository extends CrudRepository {
             console.log(error);
         }
     }
+
+    // To get a tweet by id and populate likes of it
+    async getWithLikes(id) {
+        try {
+            const tweet = await Tweet.findById(id).populate({ path: 'likes' });
+            return tweet;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export default TweetRepository;
