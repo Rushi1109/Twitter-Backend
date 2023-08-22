@@ -4,7 +4,7 @@ const tweetSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-        max: [250, 'Maximum character limit is 250'],
+        max: [250, 'Maximum character limit for a tweet is 250'],
     },
     likes: [
         {

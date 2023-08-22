@@ -4,6 +4,7 @@ const commentSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
+        max: [250, 'Maximum character limit for a comment is 250']
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
