@@ -4,12 +4,18 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import apiRoutes from "./routes/index.js";
 import { config } from "dotenv";
+import passport from "passport";
+import { passportAuth } from "./config/jwt-middleware.js";
 config();
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('common'));
+app.use(passport.initialize());
+passportAuth(passport);
+
+
 
 app.use('/api', apiRoutes);
 
