@@ -1,9 +1,10 @@
-import { TweetRepository, HashtagRepository } from "../repository/index.js";
+import { TweetRepository, HashtagRepository, UserRepository } from "../repository/index.js";
 
 class TweetService {
     constructor() {
         this.tweetRepository = new TweetRepository();
         this.hashtagRepository = new HashtagRepository();
+        this.userRepository = new UserRepository();
     }
 
     async create(data) {
@@ -15,6 +16,9 @@ class TweetService {
 
         // Calling create method of tweet-repository
         const tweet = await this.tweetRepository.create(data);
+        const user = await this.userRepository.get(tweet.user);
+        user.tweets.push(tweet.id);
+        await user.save();
 
         if (tags) {
             try {
