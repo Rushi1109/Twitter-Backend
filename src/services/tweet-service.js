@@ -1,4 +1,5 @@
 import { TweetRepository, HashtagRepository, UserRepository, LikeRepository } from "../repository/index.js";
+import CommentService from "./comment-service.js";
 
 class TweetService {
     constructor() {
@@ -6,6 +7,7 @@ class TweetService {
         this.hashtagRepository = new HashtagRepository();
         this.userRepository = new UserRepository();
         this.likeRepository = new LikeRepository();
+        this.commentService = new CommentService();
     }
 
     async create(data) {
@@ -63,7 +65,7 @@ class TweetService {
         await tweet.save();
     }
 
-    async deleteTagsOnTweet(tweetId) {
+    async deleteTagsOfTweet(tweetId) {
         const tweet = await this.tweetRepository.get(tweetId);
 
         const tags = tweet.content.match(/#[a-zA-Z0-9_]+/g);
@@ -88,8 +90,13 @@ class TweetService {
         const tweet = await this.tweetRepository.get(tweetId);
         const user = await this.userRepository.get(tweet.user);
 
-        await this.deleteTagsOnTweet(tweetId);
+        await this.deleteTagsOfTweet(tweetId);
         await this.deleteLikesOnTweet(tweetId);
+
+        // For removing comments of tweet
+        tweet.comments.forEach(async (comment) => {
+            await this.commentService.deleteComment(comment);
+        });
 
         user.tweets.pull(tweet.id);
         await user.save();
