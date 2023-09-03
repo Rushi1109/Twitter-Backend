@@ -1,7 +1,7 @@
 import express from "express";
 import { createTweet, getTweet } from "../../controllers/tweet-controller.js";
 import { toggleLike } from "../../controllers/like-controller.js";
-import { createComment } from "../../controllers/comment-controller.js";
+import { createComment, deleteComment } from "../../controllers/comment-controller.js";
 import { login, signup } from "../../controllers/auth-controller.js";
 import { authenticate } from "../../middleware/authenticate.js";
 
@@ -13,6 +13,7 @@ router.route('/tweets/:id').get(getTweet);
 router.route('/likes/toggle').post(authenticate, toggleLike);
 
 router.route('/comments').post(authenticate, createComment);
+router.route('/comments/:id').delete(authenticate, deleteComment);
 
 router.route('/signup').post(signup);
 

@@ -20,3 +20,22 @@ export const createComment = async (req, res) => {
         });
     }
 }
+
+export const deleteComment = async (req, res) => {
+    try {
+        const response = await commentService.deleteComment(req.params.id);
+        return res.status(201).json({
+            success: true,
+            message: 'Successfully deleted the comment',
+            data: response,
+            err: {}
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'something went wrong',
+            data: {},
+            err: error
+        });
+    }
+}

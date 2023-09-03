@@ -35,8 +35,8 @@ userSchema.pre('save', function (next) {
     next();
 });
 
-userSchema.methods.comparePassword = function compare(password) {
-    return bcrypt.compareSync(password, this.password);
+userSchema.methods.comparePassword = async function compare(password) {
+    return await bcrypt.compareSync(password, this.password);
 }
 
 userSchema.methods.genJWT = function generate() {
