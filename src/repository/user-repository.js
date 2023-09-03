@@ -14,6 +14,13 @@ class UserRepository extends CrudRepository {
             throw new Error(error);
         }
     }
+
+    async getLastNTweets(userId, n) {
+        const response = await User.findOne({ _id: userId });
+
+        const tweetIds = response.tweets.slice(-n);
+        return tweetIds;
+    }
 }
 
 export default UserRepository;

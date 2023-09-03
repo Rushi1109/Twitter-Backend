@@ -25,10 +25,21 @@ class TweetRepository extends CrudRepository {
     }
 
     // To get tweets using pagination
-    async getAll(offset, limit) {
+    async getAllWithLimit(offset, limit) {
         try {
             const tweet = await Tweet.find().skip(offset).limit(limit);
             return tweet;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async findTweetsById(idList) {
+        try {
+            const tweets = await Tweet.find({
+                _id: idList,
+            });
+            return tweets.reverse();
         } catch (error) {
             console.log(error);
         }

@@ -1,8 +1,9 @@
-import { UserRepository } from "../repository/index.js";
+import { TweetRepository, UserRepository } from "../repository/index.js";
 
 class UserService {
     constructor() {
         this.userRepository = new UserRepository();
+        this.tweetRepository = new TweetRepository();
     }
 
     async signup(email, password, name) {
@@ -45,6 +46,13 @@ class UserService {
         } catch (error) {
             throw error;
         }
+    }
+
+    async getUsertweets(userId, n = 10) {
+        const tweetIds = await this.userRepository.getLastNTweets(userId, n);
+
+        const tweets = await this.tweetRepository.findTweetsById(tweetIds);
+        return tweets;
     }
 }
 
